@@ -38,7 +38,19 @@ def simulaciondequemado():
 
     for i in range(arbolesmedio, arbolesmedio + 3):
         for j in range(arbolesmedio, arbolesmedio + 3):
-            bosque[i][j] = 4
+            bosque[i][j] = 3
+
+    def imprimirbosque():
+        for fila in bosque:
+            for elem in fila:
+                if elem == -1:
+                    print(arbolvivo, end="")
+                elif elem == 0:
+                    print(arbolmuerto, end="")
+                elif elem >= 1:
+                    print(arbolquemando, end="")  
+                else:
+                    print("  ", end="")
 
     def pasar_tiempo(bosque):
         for i in range(n):
@@ -57,13 +69,13 @@ def simulaciondequemado():
             vecinos_quemando += 1
         if j + 1 < n and bosque[i][j+1] > 0:
             vecinos_quemando += 1
-        if j - 1 >= 0 and bosque[i][j-1] > 0:
+        if j - 1 > 0 and bosque[i][j-1] > 0:
             vecinos_quemando += 1
-        if i - 1 >= 0 and j + 1 < n and bosque[i-1][j+1] > 0:
+        if i - 1 > 0 and j + 1 < n and bosque[i-1][j+1] > 0:
             vecinos_quemando += 1
-        if i - 1 >= 0 and bosque[i-1][j] > 0:
+        if i - 1 > 0 and bosque[i-1][j] > 0:
             vecinos_quemando += 1
-        if i - 1 >= 0 and j - 1 >= 0 and bosque[i-1][j-1] > 0:
+        if i - 1 > 0 and j - 1 >= 0 and bosque[i-1][j-1] > 0:
             vecinos_quemando += 1
         return vecinos_quemando
 
@@ -89,22 +101,24 @@ def simulaciondequemado():
         for i in range(n):
             for j in range(n):
                 if bosque[i][j] == -4:
-                    bosque[i][j]=4
+                    bosque[i][j]=3
+
+
 
     while arboles_prendidos(bosque)>0:
-        propagacion(bosque)
-        porquemarfuncion(bosque)
-        pasar_tiempo(bosque)
         t+=1
-        
+        propagacion(bosque)
+        pasar_tiempo(bosque)
+        porquemarfuncion(bosque) 
+    
     return t
 
 def tiempopromedio():
     tiempototal = 0
-    for i in range(1000):
+    for i in range(5000):
         tiempototal += simulaciondequemado()
-    promedio = tiempototal / 1000
+    promedio = tiempototal / 5000
     return promedio
 
 resultado = tiempopromedio()
-print(f"Tiempo de quemado promedio en 1000 simulaciones: {resultado}")
+print(f"Tiempo de quemado promedio en 5000 simulaciones: {resultado}")
