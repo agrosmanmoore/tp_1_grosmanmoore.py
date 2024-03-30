@@ -3,6 +3,7 @@ from termcolor import colored
 
 n = 30  # NxN es el tamaño de la grilla
 d = 0.6  # es la densidad del bosque
+densidades=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 t = 0
 p = [0, 0.2, 0.4, 0.6, 0.8, 1, 1, 1, 1]
 vacio = -2
@@ -18,7 +19,7 @@ colorav = colored("Arboles vivos: ", "green")
 coloraq = colored("Arboles quemando: ", "red")
 coloraqq = colored("Arboles quemados: ", "grey")
 
-def generar_bosque():
+def generar_bosque(d):
     bosque = []
 
     for i in range(n):
@@ -39,7 +40,7 @@ def prender_medio(bosque):
         for j in range(arbolesmedio, arbolesmedio + 3):
             bosque[i][j] = 3
 
-def imprimirbosque(av, aq, aqq, bosque):
+def imprimirbosque(av, aq, aqq, bosque,t):
     for fila in bosque:
         for elem in fila:
             if elem == -1:
@@ -119,3 +120,69 @@ def porquemarfuncion(bosque):
         for j in range(n):
             if bosque[i][j] == -4:
                 bosque[i][j] = 3
+
+def simulaciondequemado(t):
+
+    bosque = generar_bosque(d)
+    prender_medio(bosque)
+    
+
+    while arboles_prendidos(bosque) > 0:
+        t += 1
+        propagacion(bosque)
+        pasar_tiempo(bosque)
+        porquemarfuncion(bosque)
+    return t
+
+def simulaciondequemado_densidad(d, t):
+    quemadostotal = 0
+    vivosprincipio = 0
+    
+    bosque = generar_bosque(d)
+    prender_medio(bosque)
+    vivosprincipio = arboles_vivos(bosque)
+
+    while arboles_prendidos(bosque) > 0:
+        t += 1
+        propagacion(bosque)
+        pasar_tiempo(bosque)
+        porquemarfuncion(bosque)
+                
+    quemadostotal = arboles_quemados(bosque)
+    porcentaje = (quemadostotal / (vivosprincipio+9)) * 100
+    
+    return porcentaje
+
+def porcentajepromedio():
+    promedios = []
+    for i in range(len(densidades)):
+        d = densidades[i]
+        sumaporcentajes = 0
+        for j in range(100):
+            sumaporcentajes += simulaciondequemado_densidad(d, t) 
+        promedio = sumaporcentajes / 100
+        promedios.append(promedio)
+    return promedios
+
+promedios = porcentajepromedio()
+
+def imprimir_tabla_densidades():
+    print("+----------+----------------+")
+    print("| Densidad | Bosque quemado |")
+    print("+----------+----------------+")
+
+
+    for i in range(len(densidades)):
+        d = densidades[i]
+        promedio = promedios[i]
+        
+        d = str(round(d, 1))
+        d_espacios = d + " " * (8 - len(d))
+
+        promedio = str(round(promedio,2))
+        promedio_espacios=promedio+" " * (6-len(promedio))
+        
+        print("| " + d_espacios + " | " + promedio_espacios  + " %       |")
+        print("+----------+----------------+")
+
+
