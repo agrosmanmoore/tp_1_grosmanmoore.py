@@ -20,6 +20,17 @@ coloraq = colored("Arboles quemando: ", "red")
 coloraqq = colored("Arboles quemados: ", "grey")
 
 def generar_bosque(d):
+    """
+    Genera una matriz que representa un bosque, donde los árboles están distribuidos aleatoriamente
+    según la densidad d.
+
+    Args:
+        d (float): La densidad de árboles en el bosque.
+
+    Returns:
+        list: Una matriz que representa el bosque generado.
+    """
+
     bosque = []
 
     for i in range(n):
@@ -35,12 +46,36 @@ def generar_bosque(d):
     return bosque
 
 def prender_medio(bosque):
+    """
+    Prende fuego en el medio del bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        None
+    """
+
     arbolesmedio = ((n - 2) // 2)
     for i in range(arbolesmedio, arbolesmedio + 3):
         for j in range(arbolesmedio, arbolesmedio + 3):
             bosque[i][j] = 3
 
 def imprimirbosque(av, aq, aqq, bosque,t):
+    """
+    Imprime el estado actual del bosque.
+
+    Args:
+        av (int): Número de árboles vivos.
+        aq (int): Número de árboles prendidos.
+        aqq (int): Número de árboles quemados.
+        bosque (list): La matriz que representa el bosque.
+        t (int): Tiempo transcurrido.
+
+    Returns:
+        None
+    """
+
     for fila in bosque:
         for elem in fila:
             if elem == -1:
@@ -55,13 +90,35 @@ def imprimirbosque(av, aq, aqq, bosque,t):
     print(f"Tiempo transcurrido: {t} \n{colorav}{arboles_vivos(bosque)} \n{coloraq}{arboles_prendidos(bosque)} \n{coloraqq}{arboles_quemados(bosque)}")
 
 def pasar_tiempo(bosque):
+    """
+    Reduce en uno el tiempo de quemado de los árboles prendidos.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        list: La matriz actualizada que representa el bosque.
+    """
+
     for i in range(n):
         for j in range(n):
             if bosque[i][j] > 0:
                 bosque[i][j] -= 1
     return bosque
 
-def quemando_alrededor(bosque, i, j): 
+def quemando_alrededor(bosque, i, j):
+    """
+    Cuenta la cantidad de árboles prendidos alrededor de una posición en el bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+        i (int): Índice de fila.
+        j (int): Índice de columna.
+
+    Returns:
+        int: La cantidad de árboles prendidos alrededor.
+    """
+
     vecinos_quemando = 0
     if i + 1 < n and j + 1 < n and bosque[i+1][j+1] > 0:
         vecinos_quemando += 1
@@ -82,6 +139,16 @@ def quemando_alrededor(bosque, i, j):
     return vecinos_quemando
 
 def propagacion(bosque):
+    """
+    Propaga el fuego en el bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        None
+    """
+
     probabilidad_quemado = 0
     for i in range(n):
         for j in range(n):
@@ -92,6 +159,16 @@ def propagacion(bosque):
                     bosque[i][j] = porquemar
 
 def arboles_prendidos(bosque):
+    """
+    Cuenta el número de árboles prendidos en el bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        int: Número de árboles prendidos.
+    """
+
     aq = 0
     for i in range(n):
         for j in range(n):
@@ -100,6 +177,15 @@ def arboles_prendidos(bosque):
     return aq
 
 def arboles_vivos(bosque):
+    """
+    Cuenta el número de árboles vivos en el bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        int: Número de árboles vivos.
+    """
     av = 0
     for i in range(n):
         for j in range(n):
@@ -108,6 +194,16 @@ def arboles_vivos(bosque):
     return av
 
 def arboles_quemados(bosque):
+    """
+    Cuenta el número de árboles quemados en el bosque.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        int: Número de árboles quemados.
+    """
+
     aqq = 0
     for i in range(n):
         for j in range(n):
@@ -116,12 +212,31 @@ def arboles_quemados(bosque):
     return aqq
 
 def porquemarfuncion(bosque):
+    """
+    Cambia el estado de los árboles que están por quemarse.
+
+    Args:
+        bosque (list): La matriz que representa el bosque.
+
+    Returns:
+        None
+    """
+
     for i in range(n):
         for j in range(n):
             if bosque[i][j] == -4:
                 bosque[i][j] = 3
 
 def simulaciondequemado(t):
+    """
+    Simula la propagación del fuego en el bosque.
+
+    Args:
+        t (int): Tiempo inicial.
+
+    Returns:
+        int: Tiempo transcurrido.
+    """
 
     bosque = generar_bosque(d)
     prender_medio(bosque)
@@ -135,6 +250,17 @@ def simulaciondequemado(t):
     return t
 
 def simulaciondequemado_densidad(d, t):
+    """
+    Simula la propagación del fuego en el bosque con una densidad específica.
+
+    Args:
+        d (float): Densidad de árboles.
+        t (int): Tiempo inicial.
+
+    Returns:
+        float: Porcentaje de árboles quemados.
+    """
+
     quemadostotal = 0
     vivosprincipio = 0
     
@@ -154,6 +280,13 @@ def simulaciondequemado_densidad(d, t):
     return porcentaje
 
 def porcentajepromedio():
+    """
+    Calcula el porcentaje promedio de árboles quemados para diferentes densidades.
+
+    Returns:
+        list: Lista de porcentajes promedio.
+    """
+
     promedios = []
     for i in range(len(densidades)):
         d = densidades[i]
@@ -167,6 +300,13 @@ def porcentajepromedio():
 promedios = porcentajepromedio()
 
 def imprimir_tabla_densidades():
+    """
+    Imprime una tabla con las densidades y el porcentaje promedio de árboles quemados.
+
+    Returns:
+        None
+    """
+    
     print("+----------+----------------+")
     print("| Densidad | Bosque quemado |")
     print("+----------+----------------+")
